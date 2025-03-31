@@ -20,13 +20,17 @@ if (!fs.existsSync(options.input)) {
   process.exit(1);
 }
 
-console.log('Input file:', options.input);
+const jsonData = JSON.parse(fs.readFileSync(options.input, 'utf-8'));
+
+const minAsset = jsonData.reduce((min, asset) => (asset.value < min.value ? asset : min), jsonData[0]);
+
+const outputString = `${minAsset.txt}:${minAsset.value}`;
 
 if (options.display) {
-  console.log('Displaying results...');
+  console.log(outputString);
 }
 
 if (options.output) {
-  console.log('Output file:', options.output);
+  fs.writeFileSync(options.output, outputString, 'utf-8');
+  console.log(`Result written to ${options.output}`);
 }
-
